@@ -44,75 +44,156 @@ from sklearn.metrics import roc_auc_score, accuracy_score
 
 from keras import preprocessing
 
-trx1 = np.load("f:/Users/Montague/Desktop/DStuff/trx1.npy")
-try1 = np.load("f:/Users/Montague/Desktop/DStuff/try1.npy")
-tex1 = np.load("f:/Users/Montague/Desktop/DStuff/tex1.npy")
-tey1 = np.load("f:/Users/Montague/Desktop/DStuff/tey1.npy")
+posfingerx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posfingers.np.npy")
+negfingerx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negfingers.np.npy")
+posmaccx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posmaccs.np.npy")
+negmaccx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negmaccs.np.npy")
+posimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posimgs.np.npy")
+negimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negimgs.np.npy")
+posy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posy.np.npy")
+negy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negy.np.npy")
 
-trx2 = np.load("f:/Users/Montague/Desktop/DStuff/trx2.npy")
-try2 = np.load("f:/Users/Montague/Desktop/DStuff/try2.npy")
-tex2 = np.load("f:/Users/Montague/Desktop/DStuff/tex2.npy")
-tey2 = np.load("f:/Users/Montague/Desktop/DStuff/tey2.npy")
 
-trx3 = np.load("f:/Users/Montague/Desktop/DStuff/trx3.npy")
-try3 = np.load("f:/Users/Montague/Desktop/DStuff/try3.npy")
-tex3 = np.load("f:/Users/Montague/Desktop/DStuff/tex3.npy")
-tey3 = np.load("f:/Users/Montague/Desktop/DStuff/tey3.npy")
+from sklearn.model_selection import KFold
 
-trx4 = np.load("f:/Users/Montague/Desktop/DStuff/trx4.npy")
-try4 = np.load("f:/Users/Montague/Desktop/DStuff/try4.npy")
-tex4 = np.load("f:/Users/Montague/Desktop/DStuff/tex4.npy")
-tey4 = np.load("f:/Users/Montague/Desktop/DStuff/tey4.npy")
+def unison_shuffled_copies(a, b):
+    assert len(a) == len(b)
+    p = np.random.permutation(len(a))
+    return a[p], b[p]
 
-trx5 = np.load("f:/Users/Montague/Desktop/DStuff/trx5.npy")
-try5 = np.load("f:/Users/Montague/Desktop/DStuff/try5.npy")
-tex5 = np.load("f:/Users/Montague/Desktop/DStuff/tex5.npy")
-tey5 = np.load("f:/Users/Montague/Desktop/DStuff/tey5.npy")
+[shuffposmacc, shuffposimg] = unison_shuffled_copies(posmaccx, posimgx)
+[shuffnegmacc, shuffnegimg] = unison_shuffled_copies(negmaccx, negimgx)
 
-trainx = [trx1,trx2,trx3,trx4,trx5]
-trainy = [try1,try2,try3,try4,try5]
-tex = [tex1,tex2,tex3,tex4,tex5]
-tey = [tey1,tey2,tey3,tey4,tey5]
+[posmacc1, posmacc2, posmacc3, posmacc4, posmacc5] = np.array_split(shuffposmacc, 5)
+[negmacc1, negmacc2, negmacc3, negmacc4, negmacc5] = np.array_split(shuffnegmacc, 5)
 
-print("DONEZO")
+[shuffposfinger, shuffposimg] = unison_shuffled_copies(posfingerx, posimgx)
+[shuffnegfinger, shuffnegimg] = unison_shuffled_copies(negfingerx, negimgx)
 
-raw_cock_list = []
+[posfinger1, posfinger2, posfinger3, posfinger4, posfinger5] = np.array_split(shuffposfinger, 5)
+[negfinger1, negfinger2, negfinger3, negfinger4, negfinger5] = np.array_split(shuffnegfinger, 5)
 
-input_shape = tex1.shape[1:]
+[posimg1a, posimg2a, posimg3a, posimg4a, posimg5a] = np.array_split(shuffposimg, 5)
+[negimg1, negimg2, negimg3, negimg4, negimg5] = np.array_split(shuffnegimg, 5)
+
+[posy1, posy2, posy3, posy4, posy5] = np.array_split(posy, 5)
+[negy1, negy2, negy3, negy4, negy5] = np.array_split(negy, 5)
+
+posy1 = np.tile(posy1, 31)
+posy2 = np.tile(posy2, 31)
+posy3 = np.tile(posy3, 31)
+posy4 = np.tile(posy4, 31)
+posy5 = np.tile(posy5, 31)
+
+posimg1 = posimg1a
+posimg2 = posimg2a
+posimg3 = posimg3a
+posimg4 = posimg4a
+posimg5 = posimg5a
+for i in range(30):
+    posimg1 = np.concatenate((posimg1, posimg1a))
+    posimg2 = np.concatenate((posimg2, posimg2a))
+    posimg3 = np.concatenate((posimg3, posimg3a))
+    posimg4 = np.concatenate((posimg4, posimg4a))
+    posimg5 = np.concatenate((posimg5, posimg5a))
+
+posmacc1 = np.tile(posmacc1, (31, 1))
+posmacc2 = np.tile(posmacc2, (31, 1))
+posmacc3 = np.tile(posmacc3, (31, 1))
+posmacc4 = np.tile(posmacc4, (31, 1))
+posmacc5 = np.tile(posmacc5, (31, 1))
+
+posfinger1 = np.tile(posfinger1, (31, 1))
+posfinger2 = np.tile(posfinger2, (31, 1))
+posfinger3 = np.tile(posfinger3, (31, 1))
+posfinger4 = np.tile(posfinger4, (31, 1))
+posfinger5 = np.tile(posfinger5, (31, 1))
+
+img1 = np.concatenate((posimg1, negimg1))
+img2 = np.concatenate((posimg2, negimg2))
+img3 = np.concatenate((posimg3, negimg3))
+img4 = np.concatenate((posimg4, negimg4))
+img5 = np.concatenate((posimg5, negimg5))
+
+macc1 = np.concatenate((posmacc1, negmacc1))
+macc2 = np.concatenate((posmacc2, negmacc2))
+macc3 = np.concatenate((posmacc3, negmacc3))
+macc4 = np.concatenate((posmacc4, negmacc4))
+macc5 = np.concatenate((posmacc5, negmacc5))
+
+finger1 = np.concatenate((posfinger1, negfinger1))
+finger2 = np.concatenate((posfinger2, negfinger2))
+finger3 = np.concatenate((posfinger3, negfinger3))
+finger4 = np.concatenate((posfinger4, negfinger4))
+finger5 = np.concatenate((posfinger5, negfinger5))
+
+y1 = np.concatenate((posy1, negy1))
+y2 = np.concatenate((posy2, negy2))
+y3 = np.concatenate((posy3, negy3))
+y4 = np.concatenate((posy4, negy4))
+y5 = np.concatenate((posy5, negy5))
+
+trainimg1 = np.concatenate((img2, img3, img4, img5))
+trainimg2 = np.concatenate((img1, img3, img4, img5))
+trainimg3 = np.concatenate((img1, img2, img4, img5))
+trainimg4 = np.concatenate((img1, img2, img3, img5))
+trainimg5 = np.concatenate((img1, img2, img3, img4))
+
+trainmacc1 = np.concatenate((macc2, macc3, macc4, macc5))
+trainmacc2 = np.concatenate((macc1, macc3, macc4, macc5))
+trainmacc3 = np.concatenate((macc1, macc2, macc4, macc5))
+trainmacc4 = np.concatenate((macc1, macc2, macc3, macc5))
+trainmacc5 = np.concatenate((macc1, macc2, macc3, macc4))
+
+trainfinger1 = np.concatenate((finger2, finger3, finger4, finger5))
+trainfinger2 = np.concatenate((finger1, finger3, finger4, finger5))
+trainfinger3 = np.concatenate((finger1, finger2, finger4, finger5))
+trainfinger4 = np.concatenate((finger1, finger2, finger3, finger5))
+trainfinger5 = np.concatenate((finger1, finger2, finger3, finger4))
+
+trainy1 = np.concatenate((y2, y3, y4, y5))
+trainy2 = np.concatenate((y1, y3, y4, y5))
+trainy3 = np.concatenate((y1, y2, y4, y5))
+trainy4 = np.concatenate((y1, y2, y3, y5))
+trainy5 = np.concatenate((y1, y2, y3, y4))
+
+def unison_shuffled_copies2(a, b, c, d):
+    assert len(a) == len(b)
+    assert len(b) == len(c)
+    assert len(c) == len(d)
+    p = np.random.permutation(len(a))
+    return a[p], b[p], c[p], d[p]
+
+[strainimg1, strainmacc1, strainfinger1, strainy1] = unison_shuffled_copies2(trainimg1, trainmacc1, trainfinger1, trainy1)
+[strainimg2, strainmacc2, strainfinger2, strainy2] = unison_shuffled_copies2(trainimg2, trainmacc2, trainfinger2, trainy2)
+[strainimg3, strainmacc3, strainfinger3, strainy3] = unison_shuffled_copies2(trainimg3, trainmacc3, trainfinger3, trainy3)
+[strainimg4, strainmacc4, strainfinger4, strainy4] = unison_shuffled_copies2(trainimg4, trainmacc4, trainfinger4, trainy4)
+[strainimg5, strainmacc5, strainfinger5, strainy5] = unison_shuffled_copies2(trainimg5, trainmacc5, trainfinger5, trainy5)
+
+imgs = [strainimg1, strainimg2, strainimg3, strainimg4, strainimg5]
+maccs = [strainmacc1, strainmacc2, strainmacc3, strainmacc4, strainmacc5]
+fingers = [strainfinger1, strainfinger2, strainfinger3, strainfinger4, strainfinger5]
+ys = [strainy1, strainy2, strainy3, strainy4, strainy5]
+
+testimgs = [img1, img2, img3, img4, img5]
+testmaccs = [macc1, macc2, macc3, macc4, macc5]
+testfingers = [finger1, finger2, finger3, finger4, finger5]
+testys = [y1, y2, y3, y4, y5]
+
+input_shape = imgs[0].shape[1:]
+
+test_raw_cock_list = []
+train_raw_cock_list = []
+
 input_img = Input(shape=input_shape)
 
+for i in range(5):
+    maccs[i] = maccs[i].reshape(len(maccs[i]), 167, 1, 1)
+    testmaccs[i] = testmaccs[i].reshape(len(testmaccs[i]), 167, 1, 1)
+    fingers[i] = fingers[i].reshape(len(fingers[i]), 2048, 1, 1)
+    testfingers[i] = testfingers[i].reshape(len(testfingers[i]), 2048, 1, 1)
+
 from keras.callbacks import Callback
-
-class roc_callback(Callback):
-    def __init__(self):
-        self.x = trx1
-        self.y = try1
-        self.x_val = tex1
-        self.y_val = tey1
-
-    def on_train_begin(self, logs={}):
-        return
-
-    def on_train_end(self, logs={}):
-        return
-
-    def on_epoch_begin(self, epoch, logs={}):
-        return
-
-    def on_epoch_end(self, epoch, logs={}):
-        y_pred = self.model.predict(self.x)
-        roc = roc_auc_score(self.y, y_pred)
-        y_pred_val = self.model.predict(self.x_val)
-        roc_val = roc_auc_score(self.y_val, y_pred_val)
-        print('\rroc-auc: %s - roc-auc_val: %s' % (str(round(roc,4)),str(round(roc_val,4))),end=100*' '+'\n')
-        raw_cock_list.append(roc_val)
-        return
-
-    def on_batch_begin(self, batch, logs={}):
-        return
-
-    def on_batch_end(self, batch, logs={}):
-        return
 
 def BlockA(input):
     tower_1 = Conv2D(16, (1, 1), padding='same', activation='relu')(input)
@@ -177,22 +258,55 @@ def BlockC(input):
 
     
     output = keras.layers.concatenate([tower_1, tower_2], axis=-1)
-    return output 
+    return output
 
-for i in range(2):
+for i in range(5):
+    class roc_callback_noval(Callback):
+        def __init__(self):
+            self.x = imgs[i]
+            self.y = ys[i]
+            self.x_tes = testimgs[i]
+            self.y_tes = testys[i]
+    
+        def on_train_begin(self, logs={}):
+            return
+    
+        def on_train_end(self, logs={}):
+            return
+    
+        def on_epoch_begin(self, epoch, logs={}):
+            return
+    
+        def on_epoch_end(self, epoch, logs={}):
+            y_pred = self.model.predict(self.x)
+            roc = roc_auc_score(self.y, y_pred)
+            y_pred_tes = self.model.predict(self.x_tes)
+            roc_tes = roc_auc_score(self.y_tes, y_pred_tes)
+            print('\rroc-auc: %s - roc-auc_test: %s' % (str(round(roc,4)),str(round(roc_tes,4))),end=100*' '+'\n')
+            test_raw_cock_list.append(roc_tes)
+            train_raw_cock_list.append(roc)
+            return
+    
+        def on_batch_begin(self, batch, logs={}):
+            return
+    
+        def on_batch_end(self, batch, logs={}):
+            return
+
+
     xa = BlockA(input_img)
     xa = BlockA(xa)
     xa = BlockA(xa)
     xa = BlockA(xa)
     xa = ReductionA(xa)
     
-    xb = BlockB(input_img)
+    xb = BlockB(xa)
     xb = BlockB(xb)
     xb = BlockB(xb)
     xb = BlockB(xb)
     xb = ReductionB(xb)
     
-    xc = BlockC(input_img)
+    xc = BlockC(xb)
     xc = BlockC(xc)
     xc = BlockC(xc)
     xc = BlockC(xc)
@@ -207,7 +321,7 @@ for i in range(2):
     model.summary()
     
     concat = 1
-    epochs = 100
+    epochs = 50
     learning_rate = .001
     batch_size = 32
     
@@ -216,20 +330,20 @@ for i in range(2):
     optimizer = keras.optimizers.RMSprop(lr=learning_rate)
     
     model.compile(loss='mse',optimizer=optimizer)
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.05,patience=100, min_lr=1e-20, verbose=1)
-    rocauccalc = roc_callback()
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=5, min_lr=1e-20, verbose=1)
+    rocauccalc = roc_callback_noval()
     
     generator = ImageDataGenerator(rotation_range=360,
                                    fill_mode="constant",cval = 0,
                                    horizontal_flip=True, vertical_flip=True,data_format='channels_last',
                                    )
     
-    g = generator.flow(trainx[i], trainy[i], batch_size=batch_size, shuffle=True)
+    g = generator.flow(imgs[i], ys[i], batch_size=batch_size, shuffle=True)
     
     history = model.fit_generator(g,
-                                      steps_per_epoch=len(trx1)//batch_size,
+                                      steps_per_epoch=len(ys)//batch_size,
                                       epochs=epochs,
-                                      validation_data=(tex[i],tey[i]),
+                                      validation_data=(testimgs[i],testys[i]),
                                       callbacks=[reduce_lr, rocauccalc])
 
 

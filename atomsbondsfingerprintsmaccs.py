@@ -309,9 +309,9 @@ for i in range(5):
     #model.summary()
     
     concat = 1
-    epochs = 25
+    epochs = 50
     learning_rate = .001
-    batch_size = 64
+    batch_size = 32
         
     optimizer = keras.optimizers.Adam(lr=learning_rate)
     
@@ -341,7 +341,7 @@ for i in range(5):
     
     gggg = combinegenerator(g, gg, ggg)
     model.compile(loss='mse',optimizer=optimizer)
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.05,patience=100, min_lr=1e-20, verbose=1)
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=5, min_lr=1e-20, verbose=1)
     rocauccalc = roc_callback_noval()
     
     history = model.fit_generator(gggg,
