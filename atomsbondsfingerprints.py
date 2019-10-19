@@ -7,7 +7,7 @@ Created on Mon Sep 30 16:14:53 2019
 import keras
 from keras.models import Model
 from keras.layers import Conv2D, MaxPooling2D, Input
-from keras.layers.core import Dense, Dropout, Flatten
+from keras.layers.core import Dense, Flatten
 from keras.callbacks import ReduceLROnPlateau
 import numpy as np
 
@@ -15,21 +15,17 @@ from sklearn.metrics import roc_auc_score
 import random
 
 from keras.preprocessing.image import ImageDataGenerator
-import sklearn
 
 
-from rdkit import Chem
-from rdkit.Chem import AllChem
-from rdkit import DataStructs
+posfingerx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posfingers.np.npy")
+negfingerx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negfingers.np.npy")
+posmaccx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posmaccs.np.npy")
+negmaccx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negmaccs.np.npy")
+posimgx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posimgs.np.npy")
+negimgx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negimgs.np.npy")
+posy = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posy.np.npy")
+negy = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negy.np.npy")
 
-posfingerx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posfingers.np.npy")
-negfingerx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negfingers.np.npy")
-posimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posimgs.np.npy")
-negimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negimgs.np.npy")
-posy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posy.np.npy")
-negy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negy.np.npy")
-
-from sklearn.model_selection import KFold
 
 def unison_shuffled_copies(a, b):
     assert len(a) == len(b)
@@ -248,13 +244,13 @@ for i in range(5):
     xa = BlockA(xa)
     xa = ReductionA(xa)
     
-    xb = BlockB(input_img)
+    xb = BlockB(xa)
     xb = BlockB(xb)
     xb = BlockB(xb)
     xb = BlockB(xb)
     xb = ReductionB(xb)
     
-    xc = BlockC(input_img)
+    xc = BlockC(xb)
     xc = BlockC(xc)
     xc = BlockC(xc)
     xc = BlockC(xc)

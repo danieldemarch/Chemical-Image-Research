@@ -1,60 +1,23 @@
-import pickle
 import keras
-from keras.models import Sequential, Model
-from keras.layers import Conv2D, MaxPooling2D, Input, GlobalMaxPooling2D
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.optimizers import Adam
+from keras.models import Model
+from keras.layers import Conv2D, MaxPooling2D, Input
+from keras.layers.core import Dense
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
-from keras.preprocessing.image import ImageDataGenerator
-import json
-import time
 import numpy as np
-import random
 
-from dl_util import *
-from ml_util import *
-import pickle
-import keras
-from keras.models import Sequential, Model
-from keras.layers import Conv2D, MaxPooling2D, Input, GlobalMaxPooling2D
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import ReduceLROnPlateau
-import json
-import time
-import rdkit
-from rdkit import Chem
-from rdkit.Chem import AllChem
-import pandas as pd
-import numpy as np
-from matplotlib import pyplot as plt
-
-import sklearn
-import sklearn.metrics
-
-from rdkit.Chem import MACCSkeys
-from rdkit.Chem import DataStructs
-
-from keras.layers import Input, Conv2D, Dense, concatenate
-
-import tensorflow as tf
-from sklearn.metrics import roc_auc_score, accuracy_score
-
-from keras import preprocessing
-
-posfingerx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posfingers.np.npy")
-negfingerx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negfingers.np.npy")
-posmaccx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posmaccs.np.npy")
-negmaccx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negmaccs.np.npy")
-posimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posimgs.np.npy")
-negimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negimgs.np.npy")
-posy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posy.np.npy")
-negy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negy.np.npy")
+from sklearn.metrics import roc_auc_score
 
 
-from sklearn.model_selection import KFold
+posfingerx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posfingers.np.npy")
+negfingerx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negfingers.np.npy")
+posmaccx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posmaccs.np.npy")
+negmaccx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negmaccs.np.npy")
+posimgx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posimgs.np.npy")
+negimgx = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negimgs.np.npy")
+posy = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posy.np.npy")
+negy = np.load("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negy.np.npy")
+
 
 def unison_shuffled_copies(a, b):
     assert len(a) == len(b)

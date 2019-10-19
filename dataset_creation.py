@@ -18,8 +18,21 @@ from rdkit.Chem import AllChem
 from rdkit import DataStructs
 from rdkit.Chem import MACCSkeys
 
-x = np.load("f:/Users/Montague/Desktop/DStuff/testingx.npy")
-y = np.load("f:/Users/Montague/Desktop/DStuff/testingy.npy")
+import deepchem as dc
+
+hiv_tasks, hiv_datasets, transformers = dc.molnet.load_hiv(featurizer = 'Raw')
+train_dataset, valid_dataset, test_dataset = hiv_datasets
+
+x1 = train_dataset.X
+x2 = valid_dataset.X
+x3 = test_dataset.X
+
+y1 = train_dataset.y
+y2 = valid_dataset.y
+y3 = test_dataset.y
+
+x = np.concatenate((x1, x2, x3))
+y = np.concatenate((y1, y2, y3))
 
 posx = []
 negx = []
@@ -128,11 +141,11 @@ negy = np.array(negy)
 
 print(len(negx))
 print(len(posx))
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posmaccs.np", posfingerx)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negmaccs.np", negfingerx)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posmaccs.np", posmaccx)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negmaccs.np", negmaccx)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posimgs.np", posimgx)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negimgs.np", negimgx)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posy.np", posy)
-np.save("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negy.np", negy)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posfingers.np", posfingerx)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negfingers.np", negfingerx)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posmaccs.np", posmaccx)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negmaccs.np", negmaccx)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posimgs.np", posimgx)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negimgs.np", negimgx)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/posy.np", posy)
+np.save("/Users/danieldemarchi/Desktop/Chemical-Image-Research-master/datasets/negy.np", negy)

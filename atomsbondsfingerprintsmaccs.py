@@ -278,13 +278,13 @@ for i in range(5):
     xa = BlockA(xa)
     xa = ReductionA(xa)
     
-    xb = BlockB(input_img)
+    xb = BlockB(xa)
     xb = BlockB(xb)
     xb = BlockB(xb)
     xb = BlockB(xb)
     xb = ReductionB(xb)
     
-    xc = BlockC(input_img)
+    xc = BlockC(xb)
     xc = BlockC(xc)
     xc = BlockC(xc)
     xc = BlockC(xc)
