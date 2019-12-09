@@ -309,7 +309,7 @@ for i in range(5):
     #model.summary()
     
     concat = 1
-    epochs = 50
+    epochs = 15
     learning_rate = .001
     batch_size = 32
         

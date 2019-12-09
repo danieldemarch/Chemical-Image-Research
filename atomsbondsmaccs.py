@@ -18,7 +18,6 @@ import random
 from keras.preprocessing.image import ImageDataGenerator
 import sklearn
 
-
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit import DataStructs
@@ -29,9 +28,6 @@ posimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posimgs.n
 negimgx = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negimgs.np.npy")
 posy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/posy.np.npy")
 negy = np.load("f:/Users/Montague/Desktop/DStuff/atomsbondsdatasets/negy.np.npy")
-
-
-
 
 from sklearn.model_selection import KFold
 
@@ -281,7 +277,7 @@ for i in range(5):
     #model.summary()
     
     concat = 1
-    epochs = 50
+    epochs = 10
     learning_rate = .001
     batch_size = 32
         
